@@ -21,6 +21,7 @@ import { AuthGuard } from './_guards/auth.guard';
 import { UserService } from './_services/user.service';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { JwtModule } from '@auth0/angular-jwt';
+import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 
 export function tokenGetter() {
     return localStorage.getItem('token');
@@ -35,7 +36,8 @@ export function tokenGetter() {
         MemberListComponent,
         ListsComponent,
         MessagesComponent,
-        MemberCardComponent
+        MemberCardComponent,
+        MemberDetailComponent
     ],
     imports: [
         BrowserModule,
