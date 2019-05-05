@@ -58,7 +58,7 @@ export function tokenGetter() {
         JwtModule.forRoot({
             config: {
                 tokenGetter: tokenGetter,
-                whitelistedDomains: ['localhost:5000'],
+                whitelistedDomains: ['localhost:5000', 'rwherber.com:90'],
                 blacklistedRoutes: ['localhost:5000/auth']
             }
         })
