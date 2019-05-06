@@ -18,5 +18,6 @@ export class AppComponent implements OnInit {
 
     public ngOnInit(): void {
         this.authService.decodeToken();
+        this.authService.setUser();
     }
 }

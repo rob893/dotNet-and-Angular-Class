@@ -29,4 +29,8 @@ export class UserService {
     public updateUser(id: number, user: User): Observable<User> {
         return this.http.put<User>(this.baseUrl + 'users/' + id, user);
     }
+
+    public setMainPhoto(userId: number, photoId: number): Observable<object> {
+        return this.http.post(this.baseUrl + 'users/' + userId + '/photos/' + photoId + '/setMain', {});
+    }
 }
