@@ -12,6 +12,7 @@ export class NavComponent implements OnInit {
 
     public model: any = {};
     public authService: AuthService;
+    public photoUrl: string;
 
     private alertify: AlertifyService;
     private router: Router;
@@ -23,7 +24,8 @@ export class NavComponent implements OnInit {
         this.router = router;
     }
 
-    ngOnInit() {
+    public ngOnInit(): void {
+        this.authService.currentPhotoUrl.subscribe(photoUrl => this.photoUrl = photoUrl);
     }
 
 

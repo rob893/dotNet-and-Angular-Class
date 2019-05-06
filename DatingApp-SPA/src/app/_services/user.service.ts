@@ -33,4 +33,8 @@ export class UserService {
     public setMainPhoto(userId: number, photoId: number): Observable<object> {
         return this.http.post(this.baseUrl + 'users/' + userId + '/photos/' + photoId + '/setMain', {});
     }
+
+    public deletePhoto(userId: number, photoId: number): Observable<object> {
+        return this.http.delete(this.baseUrl + 'users/' + userId + '/photos/' + photoId);
+    }
 }

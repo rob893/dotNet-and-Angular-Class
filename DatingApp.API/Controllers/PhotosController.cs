@@ -25,7 +25,7 @@ namespace DatingApp.API.Controllers
         private readonly IDatingRepository repo;
         private readonly IMapper mapper;
         private readonly IOptions<CloudinarySettings> cloudinaryConfig;
-        private readonly Cloudinary cloudinary; 
+        private readonly Cloudinary cloudinary;
 
 
         public PhotosController(IDatingRepository repo, IMapper mapper, IOptions<CloudinarySettings> cloudinaryConfig)
@@ -137,6 +137,52 @@ namespace DatingApp.API.Controllers
             }
 
             return BadRequest("Could not set photo to main!");
+        }
+
+        [HttpDelete("{photoId}")]
+        public async Task<IActionResult> DeletePhoto(int userId, int photoId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            User userFromRepo = await repo.GetUser(userId);
+
+            if (!userFromRepo.Photos.Any(p => p.Id == photoId))
+            {
+                return Unauthorized();
+            }
+
+            Photo photoFromRepo = await repo.GetPhoto(photoId);
+
+            if (photoFromRepo.IsMain)
+            {
+                return BadRequest("You cannot delete your main photo!");
+            }
+
+            if (photoFromRepo.PublicId != null)
+            {
+                DeletionParams deleteParams = new DeletionParams(photoFromRepo.PublicId);
+                DeletionResult result = cloudinary.Destroy(deleteParams);
+
+                if (result.Result == "ok")
+                {
+                    repo.Delete(photoFromRepo);
+                }
+            }
+
+            if (photoFromRepo.PublicId == null)
+            {
+                repo.Delete(photoFromRepo);
+            }
+
+            if (await repo.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to delete the photo.");
         }
     }
 }
