@@ -47,8 +47,8 @@ export class AuthService {
         );
     }
 
-    public register(model: any): Observable<Object> {
-        return this.http.post(this.baseUrl + 'register', model);
+    public register(user: User): Observable<Object> {
+        return this.http.post(this.baseUrl + 'register', user);
     }
 
     public loggedIn(): boolean {
