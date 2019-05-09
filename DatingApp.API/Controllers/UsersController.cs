@@ -89,6 +89,11 @@ namespace DatingApp.API.Controllers
                 return Unauthorized();
             }
 
+            if (userId == recipientId)
+            {
+                return BadRequest("You cannot like yourself!");
+            }
+
             Like like = await repo.GetLike(userId, recipientId);
 
             if (like != null)
