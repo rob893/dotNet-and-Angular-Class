@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { User } from '../_models/user';
 import { PaginatedResults } from '../_models/pagination';
 import { map } from 'rxjs/operators';
+import { Message } from '../_models/message';
 
 
 @Injectable({
@@ -77,5 +78,31 @@ export class UserService {
 
     public sendLike(userId: number, recipientId: number): Observable<object> {
         return this.http.post(this.baseUrl + 'users/' + userId + '/like/' + recipientId, {});
+    }
+
+    public getMessages(id: number, page?: number, itemsPerPage?: number, messageContainer?: string): Observable<PaginatedResults<Message[]>> {
+        const paginatedResult: PaginatedResults<Message[]> = new PaginatedResults<Message[]>();
+
+        let params = new HttpParams();
+
+        params = params.append('MessageContainer', messageContainer);
+
+        if (page != null && itemsPerPage != null) {
+            params = params.append('pageNumber', page.toString());
+            params = params.append('pageSize', itemsPerPage.toString());
+        }
+
+        return this.http.get<Message[]>(this.baseUrl + 'users/' + id + '/messages', {observe: 'response', params})
+            .pipe(
+                map(response => {
+                    paginatedResult.results = response.body;
+
+                    if (response.headers.get('Pagination') !== null) {
+                        paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+                    }
+
+                    return paginatedResult;
+                })
+            );
     }
 }
